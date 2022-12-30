@@ -1,0 +1,86 @@
+﻿
+
+<div ng-app="app-test" ng-controller="testController as vm">
+    <div>
+        <label for="video Url">VideoURL:</label>
+        <input type="text" id="videourl" name="videourl" ng-model="vm.videoUrl"><br><br>
+    </div>
+    <button type="button" ng-click="vm.videoToPic(vm.videoUrl)">Generate Pic and Upload</button>
+
+</div>
+
+
+
+
+@section Scripts{
+    <script>
+        var app = angular.module("app-test", ['ngSanitize', 'ngAnimate', 'ngTouch', 'uiCropper']);
+
+        app.controller("testController", function ($scope, $http, $timeout, $window) {
+            var vm = this;
+            vm.videoUrl;
+            vm.pic64;
+
+            vm.getVideo = function () {
+                vm.isBusy = false;
+                var apiUrl = "/Api/Data/GetVideoUrl";
+
+                $http({
+                    method: 'GET',
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    url: apiUrl
+
+                }).then(function successCallback(response) {
+                    vm.videoUrl = response.data;
+                }, function errorCallback(response) {
+                    alert("Error. Try Again!");
+                });
+            }
+
+            vm.uploadBase64Pic = function (base64Pic) {
+                
+                var apiUrl = "/api/Data/UploadPic";
+                vm.isBusy = true;
+                $http({
+                    method: 'put',
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    url: apiUrl,
+                    data: base64Pic
+                })
+                    .then(function (response) {
+
+                        if (response) {
+                            console.log("Successfully uploaded");
+                            
+                        }
+
+                    }, function (err) {
+                       alert("faile");
+                       
+                    }).finally(function () {
+
+                    });
+            }
+
+            vm.videoToPic = function () {
+
+                var pic = "";
+
+                //get the 5 second video frame and use the pic variable
+
+                vm.uploadBase64Pic(pic);
+            }
+
+            vm.getVideo();
+
+
+
+
+        });</script>
+
+
+}
