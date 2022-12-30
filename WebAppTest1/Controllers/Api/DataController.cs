@@ -25,6 +25,8 @@ namespace WebAppTest1.Controllers.Api
         [HttpPut("UploadPic")]
         public bool UploadPic(string basee64pic)
         {
+            var guid = new Guid();
+            var filename = guid.ToString();
 
             //make a function that save pic here
 
